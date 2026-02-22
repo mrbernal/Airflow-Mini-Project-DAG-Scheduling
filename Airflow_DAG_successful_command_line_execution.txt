@@ -1,0 +1,33 @@
+magenta@ColorMePurple:~$ cd $HOME/airflow/dags
+magenta@ColorMePurple:~/airflow/dags$ chmod +x run_marketvol.sh
+magenta@ColorMePurple:~/airflow/dags$ ./run_marketvol.sh 2026-02-22
+'2026-02-22' is a weekend. Use a weekday date (Mon-Fri), e.g. ./run_marketvol.sh 2026-02-20
+magenta@ColorMePurple:~/airflow/dags$ ./run_marketvol.sh 2026-02-20
+Starting Airflow services...
+[+] up 5/5
+ ✔ Container dags-postgres-1          Running                                                                       0.0s
+ ✔ Container dags-redis-1             Running                                                                       0.0s
+ ✔ Container dags-airflow-worker-1    Running                                                                       0.0s
+ ✔ Container dags-airflow-webserver-1 Running                                                                       0.0s
+ ✔ Container dags-airflow-scheduler-1 Running                                                                       0.0s
+Airflow metadata DB already initialized. Skipping airflow-init.
+Waiting for DAG registration in scheduler...
+DAG 'marketvol' is registered.
+Unpausing DAG if needed...
+No paused DAGs were found
+Triggering DAG run...
+[2026-02-22T18:23:34.147+0000] {__init__.py:43} INFO - Loaded API auth backend: airflow.api.auth.backend.session
+     |           |                       |                       |                       |          |                  | last_scheduling_decisi |                       |          |            |
+conf | dag_id    | dag_run_id            | data_interval_start   | data_interval_end     | end_date | external_trigger | on                     | logical_date          | run_type | start_date | state
+=====+===========+=======================+=======================+=======================+==========+==================+========================+=======================+==========+============+=======
+{}   | marketvol | manual__2026-02-20_17 | 2026-02-19            | 2026-02-20            | None     | True             | None                   | 2026-02-20            | manual   | None       | queued
+     |           | 71784587              | 18:00:00+00:00        | 18:00:00+00:00        |          |                  |                        | 18:00:00+00:00        |          |            |
+                                                                                                                        
+Recent DAG runs:
+dag_id    | run_id                        | state   | execution_date            | start_date                       | end_date
+==========+===============================+=========+===========================+==================================+=================================
+marketvol | manual__2026-02-22_1771778194 | failed  | 2026-02-22T18:00:00+00:00 | 2026-02-22T18:00:04.589208+00:00 | 2026-02-22T18:10:19.973988+00:00
+marketvol | manual__2026-02-20_1771784587 | success | 2026-02-20T18:00:00+00:00 | 2026-02-22T18:23:35.126462+00:00 | 2026-02-22T18:23:35.157579+00:00
+                                                                                                                        
+Triggered DAG=marketvol RUN_ID=manual__2026-02-20_1771784587 LOGICAL_DATE=2026-02-20
+magenta@ColorMePurple:~/airflow/dags$
