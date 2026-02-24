@@ -1,11 +1,13 @@
 """This DAG downloads AAPL and TSLA stock data and makes a simple summary report."""
 
 import io
+import os
 import subprocess
-from datetime import date, datetime, time, timedelta
+from datetime import datetime, timedelta
 from pathlib import Path
 
 import pandas as pd
+import pendulum
 import yfinance as yf
 from airflow import DAG
 from airflow.operators.bash import BashOperator
@@ -18,6 +20,14 @@ default_args = {
 	"retries": 2,
 	"retry_delay": timedelta(minutes=5),
 }
+
+
+LOCAL_TZ = pendulum.timezone("America/Chicago")
+START_DATE_ENV = os.getenv("MARKETVOL_START_DATE")
+if START_DATE_ENV:
+	START_DATE = pendulum.parse(START_DATE_ENV, tz=LOCAL_TZ)
+else:
+	START_DATE = pendulum.now(LOCAL_TZ).subtract(days=7).replace(hour=18, minute=0, second=0, microsecond=0)
 
 
 def download_market_data(symbol: str, execution_date: str, output_dir: str) -> None:
@@ -100,7 +110,7 @@ with DAG(
 	dag_id="marketvol",
 	default_args=default_args,
 	description="Download and analyze weekday intraday market data",
-	start_date=datetime.combine(date.today(), time(hour=18, minute=0)),
+	start_date=START_DATE,
 	schedule="0 18 * * 1-5",
 	catchup=False,
 	tags=["market", "yfinance", "magenta"],
